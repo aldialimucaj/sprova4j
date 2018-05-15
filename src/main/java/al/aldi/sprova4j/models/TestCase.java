@@ -9,9 +9,9 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static al.aldi.sprova4j.models.TestStep.PENDING;
+import static al.aldi.sprova4j.models.Execution.TYPE_AUTOMATED;
+import static al.aldi.sprova4j.models.TestStep.STATUS_PENDING;
 
 public class TestCase extends SprovaObject {
     public String _id;
@@ -41,7 +41,8 @@ public class TestCase extends SprovaObject {
         result.title = title;
         result.description = description;
         result.testSteps = testSteps;
-        result.status = PENDING;
+        result.status = STATUS_PENDING;
+        result.executionType = TYPE_AUTOMATED;
 
         for (int i = 0; i < result.testSteps.size(); i++) {
             result.testSteps.get(i).execution = result;

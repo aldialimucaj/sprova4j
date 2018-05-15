@@ -12,6 +12,11 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 public class Execution extends SprovaObject {
+
+    public static final String TYPE_MANUAL = "MANUAL";
+    public static final String TYPE_AUTOMATED = "AUTOMATED";
+    public static final String TYPE_SEMI_AUTOMATED = "SEMI_AUTOMATED";
+
     public String _id;
     public String title;
     public String description;
@@ -20,9 +25,12 @@ public class Execution extends SprovaObject {
     public String cycleId;
     public String parentId;
     public String status;
+    public String executionType;
     public List<TestStep> testSteps;
     public Date createdAt;
     public Date updatedAt;
+
+
 
     public void passTest(){
         client.passExecution(this);

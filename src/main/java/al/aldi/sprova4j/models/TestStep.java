@@ -1,7 +1,5 @@
 package al.aldi.sprova4j.models;
 
-import al.aldi.sprova4j.SprovaApiClient;
-import al.aldi.sprova4j.exections.TestCaseException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -22,10 +20,13 @@ public class TestStep extends SprovaObject {
     public transient Execution execution;
     public transient int index;
 
-    public static final String PENDING = "PENDING";
+    public static final String STATUS_PENDING = "PENDING";
+    public static final String STATUS_WORKING = "WORKING";
+    public static final String STATUS_SUCCESSFUL = "SUCCESSFUL";
+    public static final String STATUS_FAILED = "FAILED";
 
     public TestStep() {
-        this.status = PENDING;
+        this.status = STATUS_PENDING;
     }
 
     public boolean pass(){
