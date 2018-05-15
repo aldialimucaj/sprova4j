@@ -1,6 +1,8 @@
 plugins {
     id 'com.github.johnrengelman.shadow' version '2.0.4'
     id 'java'
+    id "com.bmuschko.nexus" version "2.3.1"
+    id 'maven-publish'
 }
 
 group 'al.aldi.sprova4j'
@@ -19,13 +21,12 @@ dependencies {
     testImplementation group: 'com.squareup.okhttp3', name: 'mockwebserver', version: '3.10.0'
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
 
-    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
     implementation 'com.google.code.gson:gson:2.8.3'
+    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+    implementation group: 'com.squareup.okio', name: 'okio', version: '1.0.0'
     implementation group: 'org.glassfish', name: 'javax.json', version: '1.1.2'
     implementation group: 'javax.json', name: 'javax.json-api', version: '1.1.2'
     implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
-
-
 }
 
 jar {
@@ -50,12 +51,60 @@ publishing {
             project.shadow.component(publication)
         }
     }
-}
-publishing {
-    repositories {
-        maven {
-            // change to point to your repo, e.g. http://my.org/repo
-            url "$buildDir/repo"
+
+    publications {
+        mavenJava(MavenPublication) {
+            groupId project.group
+            artifactId 'sprova4j'
+            version project.version
+
+
+            from components.java
         }
     }
+}
+
+publishing {
+    repositories {
+        jcenter()
+    }
+}
+
+modifyPom {
+    project {
+        name 'sprova4j'
+        description 'Java client for Sprova Test Management'
+        url 'https://github.com/aldialimucaj/sprova4j'
+        inceptionYear '2018'
+        scm {
+            url 'https://github.com/aldialimucaj/sprova4j'
+            connection 'scm:https://github.com/aldialimucaj/sprova4j.git'
+            developerConnection 'scm:ghttps://github.com/aldialimucaj/sprova4j.git'
+        }
+        licenses {
+            license {
+                name 'The Apache Software License, Version 2.0'
+                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                distribution 'repo'
+            }
+        }
+        developers {
+            developer {
+                id 'aldi'
+                name 'Aldi Alimuçaj'
+                email 'aldi.alimucaj@gmail.com'
+            }
+        }
+    }
+}
+
+extraArchive {
+    sources = true
+    tests = true
+    javadoc = true
+}
+nexus {
+    sign = true
+    repositoryUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+    snapshotRepositoryUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
 }
