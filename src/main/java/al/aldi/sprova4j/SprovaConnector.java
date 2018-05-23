@@ -42,8 +42,8 @@ public class SprovaConnector {
      *
      * @return authentication success
      */
-    public boolean authenticate() {
-        logger.warn("authenticate() not implemented");
+    public boolean isAuthenticated() {
+        logger.warn("isAuthenticated() not implemented");
         return true;
     }
 
