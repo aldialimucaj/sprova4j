@@ -18,8 +18,8 @@ public class SprovaObjectFilterTest {
     public void toJson() {
         SprovaObjectFilter filter = new SprovaObjectFilter();
         filter.add("one", "1");
-        assertEquals("json object should contain key","{\"one\":\"1\"}",filter.toJson());
+        assertEquals("json object should contain key","{\"filter\":{\"one\":\"1\"}}",filter.toJson());
         filter.add("one", "1").add("two", "2");
-        assertEquals("json object should contain key","{\"one\":\"1\",\"two\":\"2\"}",filter.toJson());
+        assertEquals("json object should contain key","{\"filter\":{\"one\":\"1\",\"two\":\"2\"}}",filter.toJson());
     }
 }

@@ -43,6 +43,7 @@ public class Connector {
      * @return authentication success
      */
     public boolean authenticate() {
+        logger.warn("authenticate() not implemented");
         return true;
     }
 

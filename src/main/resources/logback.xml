@@ -9,8 +9,15 @@
             </Pattern>
 
         </layout>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>WARN</level>
+        </filter>
     </appender>
 
+    <logger name="al.aldi" additivity="false">
+        <appender-ref ref="INFO_CONSOLE" />
+    </logger>
+    <logger name="ch.qos.logback" level="INFO" />
     <root level="debug">
         <appender-ref ref="STDOUT" />
     </root>
