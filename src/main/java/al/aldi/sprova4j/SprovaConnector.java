@@ -10,8 +10,8 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 
-public class Connector {
-    private static final Logger logger = LoggerFactory.getLogger(Connector.class);
+public class SprovaConnector {
+    private static final Logger logger = LoggerFactory.getLogger(SprovaConnector.class);
 
     private final String API_ADDRESS;
     private final String JWT_KEY;
@@ -21,14 +21,14 @@ public class Connector {
     private SprovaApiClient apiClient;
 
 
-    public Connector(String apiAddress, String jwtKey) throws Exception {
+    public SprovaConnector(String apiAddress, String jwtKey) throws Exception {
         this.API_ADDRESS = ApiUtils.sanitizeUrl(apiAddress);
         this.JWT_KEY = jwtKey;
         this.username = null;
         this.password = null;
     }
 
-    public Connector(String apiAddress, String username, String password) throws Exception {
+    public SprovaConnector(String apiAddress, String username, String password) throws Exception {
         this.API_ADDRESS = ApiUtils.sanitizeUrl(apiAddress);
         this.username = username;
         this.password = password;
