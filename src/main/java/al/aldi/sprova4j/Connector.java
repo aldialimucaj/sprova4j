@@ -40,7 +40,7 @@ public class Connector {
     /**
      * Make sure user is authenticated via JWT token.
      *
-     * @return
+     * @return authentication success
      */
     public boolean authenticate() {
         return true;
@@ -65,6 +65,11 @@ public class Connector {
         return result;
     }
 
+    /**
+     * Get or initialize and get client.
+     *
+     * @return sprova api client
+     */
     public SprovaApiClient getApiClient() {
         if (this.apiClient == null) {
             try {

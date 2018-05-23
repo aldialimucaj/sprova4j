@@ -3,12 +3,11 @@ plugins {
     id 'java'
     id "com.bmuschko.nexus" version "2.3.1"
     id 'maven-publish'
+    id 'io.codearte.nexus-staging' version '0.11.0'
 }
 
-group 'al.aldi.sprova4j'
+group 'al.aldi'
 version '0.1.0'
-
-apply plugin: 'maven-publish'
 
 sourceCompatibility = 1.8
 
@@ -70,6 +69,10 @@ publishing {
     }
 }
 
+nexusStaging {
+    stagingProfileId = "sprova4j" //when not defined will be got from server using "packageGroup"
+}
+
 modifyPom {
     project {
         name 'sprova4j'
@@ -91,7 +94,7 @@ modifyPom {
         developers {
             developer {
                 id 'aldi'
-                name 'Aldi Alimuçaj'
+                name 'Aldi Alimucaj'
                 email 'aldi.alimucaj@gmail.com'
             }
         }
@@ -103,6 +106,7 @@ extraArchive {
     tests = true
     javadoc = true
 }
+
 nexus {
     sign = true
     repositoryUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
