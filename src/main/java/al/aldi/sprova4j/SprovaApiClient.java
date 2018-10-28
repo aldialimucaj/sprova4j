@@ -1,9 +1,9 @@
 package al.aldi.sprova4j;
 
-import al.aldi.sprova4j.exections.CycleException;
-import al.aldi.sprova4j.exections.ExecutionException;
-import al.aldi.sprova4j.exections.SprovaClientException;
-import al.aldi.sprova4j.exections.TestCaseException;
+import al.aldi.sprova4j.exceptions.CycleException;
+import al.aldi.sprova4j.exceptions.ExecutionException;
+import al.aldi.sprova4j.exceptions.SprovaClientException;
+import al.aldi.sprova4j.exceptions.TestCaseException;
 import al.aldi.sprova4j.models.Cycle;
 import al.aldi.sprova4j.models.Execution;
 import al.aldi.sprova4j.models.Project;
@@ -15,7 +15,6 @@ import javax.validation.constraints.NotNull;
 import okhttp3.*;
 
 import java.io.IOException;
-import java.util.Base64;
 import java.util.List;
 
 import static al.aldi.sprova4j.utils.ApiUtils.*;

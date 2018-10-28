@@ -1,7 +1,6 @@
 package al.aldi.sprova4j.models;
 
-import al.aldi.sprova4j.SprovaApiClient;
-import al.aldi.sprova4j.exections.CycleException;
+import al.aldi.sprova4j.exceptions.CycleException;
 import al.aldi.sprova4j.utils.SprovaObjectFilter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

@@ -1,6 +1,6 @@
 package al.aldi.sprova4j;
 
-import al.aldi.sprova4j.exections.SprovaClientException;
+import al.aldi.sprova4j.exceptions.SprovaClientException;
 import al.aldi.sprova4j.models.aux.AuthenticationRequest;
 import al.aldi.sprova4j.models.aux.AuthenticationResponse;
 import al.aldi.sprova4j.utils.ApiUtils;
