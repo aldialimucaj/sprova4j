@@ -10,19 +10,17 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Cycle extends SprovaObject {
+public class TestSet extends SprovaObject{
     public String _id;
     public String title;
     public String description;
-    public String projectId;
     public String status;
+
+    public String testCaseId;
+    public String cycleId;
+    public String projectId;
+
     public List<String> testCaseIDs;
-
-    public TestCase findOneTest(SprovaObjectFilter filter) throws TestCaseException {
-        TestCase result = client.filterTestCaseByCycleId(_id, filter.toJson());
-
-        return result;
-    }
 
     public List<TestCase> getTestCases() {
         List<TestCase> result = client.getTestCasesByCycleId(_id);
@@ -33,18 +31,17 @@ public class Cycle extends SprovaObject {
         return result;
     }
 
-    public static Cycle toObject(String json) {
+    public static TestSet toObject(String json) {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
-        return gson.fromJson(json, Cycle.class);
+        return gson.fromJson(json, TestSet.class);
     }
 
-    public static List<Cycle> toObjects(String json) {
-        Type listType = new TypeToken<ArrayList<Cycle>>() {
+    public static List<TestSet> toObjects(String json) {
+        Type listType = new TypeToken<ArrayList<TestSet>>() {
         }.getType();
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         return gson.fromJson(json, listType);
     }
-
 }
