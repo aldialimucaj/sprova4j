@@ -35,12 +35,14 @@ public class TestSet extends SprovaObject {
         return result;
     }
 
-    public TestSetExecutionResponse createExecution() {
-        TestSetExecutionResponse result = null;
-        try {
-            result = client.createTestExecution(TestSetExecution.fromTestSet(this));
-        } catch (TestSetException e) {
-            e.printStackTrace();
+    public TestSetExecution createExecution() throws TestSetException {
+        TestSetExecution result = null;
+        TestSetExecutionResponse response = client.createTestExecution(TestSetExecution.fromTestSet(this));
+
+        if (response.isSuccessful()) {
+            result = client.getTestSetExecutionById(response._id);
+        } else {
+            throw new TestSetException("Could not create execution");
         }
 
         return result;

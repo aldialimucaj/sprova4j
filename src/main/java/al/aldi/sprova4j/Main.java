@@ -26,15 +26,21 @@ public class Main {
             conn = new Connector("http://localhost:8181/", "admin", "admin");
 
             apiClient = conn.getApiClient();
-            project = apiClient.getProject("5af582d1dccd6600137334a0");
+            project = apiClient.getProject("5ae5bda75b435f3d2b999c79");
             cycle = project.findOneCycle(new SprovaObjectFilter().add("title", "Release 6.3"));
 
             SprovaObjectFilter filter = new SprovaObjectFilter().add("jiraId", "SYSTEST-1");
             TestCase test1 = cycle.findOneTest(filter);
             exec = test1.startExecution();
 
-            TestSet oneTestSet = cycle.findOneTestSet(new SprovaObjectFilter().add("title", "import"));
-            TestSetExecutionResponse execution = oneTestSet.createExecution();
+            TestSet oneTestSet = cycle.findOneTestSet(new SprovaObjectFilter().add("title", "fe"));
+            TestSetExecution execution = oneTestSet.createExecution();
+
+            Execution execution1 = null;
+            while((execution1 = execution.getNextPending()) != null){
+                execution1.passTest();
+            }
+
 
         } catch (Exception e) {
             System.err.println("Tried to connect to Sprova server but got " + e.getMessage());

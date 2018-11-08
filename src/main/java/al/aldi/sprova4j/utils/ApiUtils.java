@@ -21,6 +21,7 @@ public class ApiUtils {
 
     public static final String FILTER = "filter";
     public static final String FIND_ONE = "findOne";
+    public static final String NEXT_PENDING = "next-pending";
 
     public static final String API_PROJECTS = API + "/" + PROJECTS;
     public static final String API_CYCLES = API + "/" + CYCLES;

@@ -6,7 +6,9 @@ import al.aldi.sprova4j.models.aux.MongoDbInsertResponse;
 import al.aldi.sprova4j.models.aux.TestSetExecutionResponse;
 import al.aldi.sprova4j.utils.AuthorizationInterceptor;
 import al.aldi.sprova4j.utils.LoggingInterceptor;
+
 import javax.validation.constraints.NotNull;
+
 import okhttp3.*;
 
 import java.io.IOException;
@@ -24,10 +26,10 @@ public class SprovaApiClient {
 
 
     protected SprovaApiClient(@NotNull String apiUrl, @NotNull String jwtToken) throws SprovaClientException {
-        if(apiUrl == null) {
+        if (apiUrl == null) {
             throw new SprovaClientException("API_URL cannot be null");
         }
-        if(jwtToken == null) {
+        if (jwtToken == null) {
             throw new SprovaClientException("JWT_TOKEN cannot be null");
         }
         this.API_URL = apiUrl;
@@ -62,7 +64,7 @@ public class SprovaApiClient {
 
         try {
             result = Cycle.toObject(post(String.format("%s/%s/%s/findOne", API_PROJECTS, projectId, CYCLES), jsonFiler));
-            if (result  == null) {
+            if (result == null) {
                 throw new CycleException("Cycle not found => filter: " + jsonFiler);
             }
             result.setClient(this);
@@ -97,7 +99,7 @@ public class SprovaApiClient {
 
         try {
             result = TestCase.toObject(post(String.format("%s/%s/%s/findOne", API_CYCLES, cycleId, TESTCASES), jsonFiler));
-            if (result  == null) {
+            if (result == null) {
                 throw new TestCaseException("Test case not found => filter: " + jsonFiler);
             }
             result.setClient(this);
@@ -134,7 +136,7 @@ public class SprovaApiClient {
 
         try {
             result = TestSet.toObject(post(String.format("%s/%s/%s/findOne", API_CYCLES, cycleId, TESTSETS), jsonFiler));
-            if (result  == null) {
+            if (result == null) {
                 throw new TestCaseException("Test set not found => filter: " + jsonFiler);
             }
             result.setClient(this);
@@ -151,7 +153,7 @@ public class SprovaApiClient {
 
         try {
             result = TestSet.toObjects(post(String.format("%s/%s", API_TESTSETS, FILTER), jsonFiler));
-            if (result  == null) {
+            if (result == null) {
                 throw new TestSetException("Test set not found => filter: " + jsonFiler);
             }
             for (TestSet c : result) {
@@ -168,12 +170,25 @@ public class SprovaApiClient {
     // TEST SET EXECUTION
     // ----------------------------------------------------------------------------
 
+    public TestSetExecution getTestSetExecutionById(final String id) {
+        TestSetExecution result = null;
+
+        try {
+            result = TestSetExecution.toObject(get(String.format("%s/%s", API_TESTSET_EXECUTIONS, id)));
+            result.setClient(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
     public TestSetExecutionResponse createTestExecution(final TestSetExecution testSetExecution) throws TestSetException {
         TestSetExecutionResponse result = null;
 
         try {
             result = TestSetExecutionResponse.toObject(post(String.format("%s", API_TESTSET_EXECUTIONS), testSetExecution.toJson()));
-            if (result  == null) {
+            if (result == null) {
                 throw new TestSetException("Could not create new test set execution");
             }
         } catch (IOException e) {
@@ -182,6 +197,21 @@ public class SprovaApiClient {
 
         return result;
     }
+
+    public Execution getNextPendingExecution(final TestSetExecution testSetExecution) {
+        Execution result = null;
+        try {
+            result = Execution.toObject(get(String.format("%s/%s/%s", API_TESTSET_EXECUTIONS, testSetExecution._id, NEXT_PENDING)));
+            if (result != null) {
+                result.setClient(this);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
 
     // ----------------------------------------------------------------------------
     // TEST CASE

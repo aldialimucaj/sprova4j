@@ -3,8 +3,7 @@ package al.aldi.sprova4j.models;
 import al.aldi.sprova4j.exections.TestCaseException;
 import al.aldi.sprova4j.models.enums.TestSetExecutionStatus;
 import al.aldi.sprova4j.utils.SprovaObjectFilter;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
@@ -44,6 +43,10 @@ public class TestSetExecution extends SprovaObject {
         return result;
     }
 
+    public Execution getNextPending() {
+        return client.getNextPendingExecution(this);
+    }
+
     public List<TestCase> getExecutions() {
         List<TestCase> result = client.getTestCasesByCycleId(_id);
         for (TestCase testCase : result) {
@@ -59,7 +62,12 @@ public class TestSetExecution extends SprovaObject {
 
     public static TestSetExecution toObject(String json) {
         GsonBuilder builder = new GsonBuilder();
-        Gson gson = builder.create();
+
+        Gson gson = builder.registerTypeAdapter(Instant.class, (JsonDeserializer<Instant>) (json1, type, jsonDeserializationContext) -> {
+            Instant instant = Instant.parse(json1.getAsString());
+            return instant;
+        }).create();
+
         return gson.fromJson(json, TestSetExecution.class);
     }
 

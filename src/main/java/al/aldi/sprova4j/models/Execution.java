@@ -31,8 +31,7 @@ public class Execution extends SprovaObject {
     public Date updatedAt;
 
 
-
-    public void passTest(){
+    public void passTest() {
         client.passExecution(this);
     }
 
@@ -40,23 +39,28 @@ public class Execution extends SprovaObject {
         client.failExecution(this);
     }
 
-    public boolean passStep(int stepIndex){
+    public boolean passStep(int stepIndex) {
         return client.passStep(this, stepIndex);
     }
 
-    public boolean failStep(int stepIndex){
+    public boolean failStep(int stepIndex) {
         return client.failStep(this, stepIndex);
     }
 
 
     public static Execution toObject(String json) {
-        GsonBuilder builder = new GsonBuilder();
-        Gson gson = builder.create();
-        return gson.fromJson(json, Execution.class);
+        Execution result = null;
+        if (json != null && !json.isEmpty()) {
+            GsonBuilder builder = new GsonBuilder();
+            Gson gson = builder.create();
+            result = gson.fromJson(json, Execution.class);
+        }
+        return result;
     }
 
     public static List<Execution> toObjects(String json) {
-        Type listType = new TypeToken<ArrayList<Execution>>(){}.getType();
+        Type listType = new TypeToken<ArrayList<Execution>>() {
+        }.getType();
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         return gson.fromJson(json, listType);
