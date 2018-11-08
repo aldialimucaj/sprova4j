@@ -1,14 +1,16 @@
 package al.aldi.sprova4j;
 
-import al.aldi.sprova4j.exections.*;
+import al.aldi.sprova4j.exceptions.CycleException;
+import al.aldi.sprova4j.exceptions.ExecutionException;
+import al.aldi.sprova4j.exceptions.SprovaClientException;
+import al.aldi.sprova4j.exceptions.TestCaseException;
+import al.aldi.sprova4j.exections.TestSetException;
 import al.aldi.sprova4j.models.*;
 import al.aldi.sprova4j.models.aux.MongoDbInsertResponse;
 import al.aldi.sprova4j.models.aux.TestSetExecutionResponse;
 import al.aldi.sprova4j.utils.AuthorizationInterceptor;
 import al.aldi.sprova4j.utils.LoggingInterceptor;
-
 import javax.validation.constraints.NotNull;
-
 import okhttp3.*;
 
 import java.io.IOException;
@@ -26,10 +28,10 @@ public class SprovaApiClient {
 
 
     protected SprovaApiClient(@NotNull String apiUrl, @NotNull String jwtToken) throws SprovaClientException {
-        if (apiUrl == null) {
+        if(apiUrl == null) {
             throw new SprovaClientException("API_URL cannot be null");
         }
-        if (jwtToken == null) {
+        if(jwtToken == null) {
             throw new SprovaClientException("JWT_TOKEN cannot be null");
         }
         this.API_URL = apiUrl;
@@ -64,7 +66,7 @@ public class SprovaApiClient {
 
         try {
             result = Cycle.toObject(post(String.format("%s/%s/%s/findOne", API_PROJECTS, projectId, CYCLES), jsonFiler));
-            if (result == null) {
+            if (result  == null) {
                 throw new CycleException("Cycle not found => filter: " + jsonFiler);
             }
             result.setClient(this);
@@ -99,7 +101,7 @@ public class SprovaApiClient {
 
         try {
             result = TestCase.toObject(post(String.format("%s/%s/%s/findOne", API_CYCLES, cycleId, TESTCASES), jsonFiler));
-            if (result == null) {
+            if (result  == null) {
                 throw new TestCaseException("Test case not found => filter: " + jsonFiler);
             }
             result.setClient(this);
@@ -111,10 +113,22 @@ public class SprovaApiClient {
         return result;
     }
 
-
     // ----------------------------------------------------------------------------
     // TEST SET
     // ----------------------------------------------------------------------------
+
+    public TestSet getTestSet(String testSetId) {
+        TestSet result = null;
+        try {
+            result = TestSet.toObject(get(String.format("%s/%s", API_TESTSETS, testSetId)));
+            result.setClient(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
 
     public List<TestSet> getTestSetsByCycleId(String cycleId) {
         List<TestSet> result = null;
@@ -123,6 +137,21 @@ public class SprovaApiClient {
             result = TestSet.toObjects(get(String.format("%s/%s/%s", API_CYCLES, cycleId, TESTSETS)));
             for (TestSet c : result) {
                 c.setClient(this);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
+    public List<TestCase> getTestCasesByTestSetId(String testSetId) {
+        List<TestCase> result = null;
+
+        try {
+            result = TestCase.toObjects(get(String.format("%s/%s/%s", API_TESTSETS, testSetId, TESTCASES)));
+            for (TestCase t : result) {
+                t.setClient(this);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -319,6 +348,25 @@ public class SprovaApiClient {
         }
 
         return execution;
+    }
+
+
+    // ----------------------------------------------------------------------------
+    // TEST SET EXECUTION
+    // ----------------------------------------------------------------------------
+    public List<TestSetExecution> getTestSetExecutionsByTestSetId(String cycleId) {
+        List<TestSetExecution> result = null;
+
+        try {
+            result = TestSetExecution.toObjects(get(String.format("%s/%s/%s", API_TESTSETS, cycleId, TESTSET_EXECUTIONS)));
+            for (TestSetExecution c : result) {
+                c.setClient(this);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return result;
     }
 
 

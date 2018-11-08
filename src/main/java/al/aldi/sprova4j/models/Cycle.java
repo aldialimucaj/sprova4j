@@ -1,14 +1,11 @@
 package al.aldi.sprova4j.models;
 
-import al.aldi.sprova4j.SprovaApiClient;
-import al.aldi.sprova4j.exections.TestCaseException;
+import al.aldi.sprova4j.exceptions.TestCaseException;
 import al.aldi.sprova4j.utils.SprovaObjectFilter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-import javax.json.Json;
-import javax.json.JsonObject;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +16,7 @@ public class Cycle extends SprovaObject {
     public String description;
     public String projectId;
     public String status;
+    public List<String> testCaseIDs;
 
     public TestCase findOneTest(SprovaObjectFilter filter) throws TestCaseException {
         TestCase result = client.filterTestCaseByCycleId(_id, filter.toJson());

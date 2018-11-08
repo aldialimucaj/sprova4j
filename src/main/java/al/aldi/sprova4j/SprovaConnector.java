@@ -1,6 +1,6 @@
 package al.aldi.sprova4j;
 
-import al.aldi.sprova4j.exections.SprovaClientException;
+import al.aldi.sprova4j.exceptions.SprovaClientException;
 import al.aldi.sprova4j.models.aux.AuthenticationRequest;
 import al.aldi.sprova4j.models.aux.AuthenticationResponse;
 import al.aldi.sprova4j.utils.ApiUtils;
@@ -10,8 +10,8 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 
-public class Connector {
-    private static final Logger logger = LoggerFactory.getLogger(Connector.class);
+public class SprovaConnector {
+    private static final Logger logger = LoggerFactory.getLogger(SprovaConnector.class);
 
     private final String API_ADDRESS;
     private final String JWT_KEY;
@@ -21,14 +21,14 @@ public class Connector {
     private SprovaApiClient apiClient;
 
 
-    public Connector(String apiAddress, String jwtKey) throws Exception {
+    public SprovaConnector(String apiAddress, String jwtKey) throws Exception {
         this.API_ADDRESS = ApiUtils.sanitizeUrl(apiAddress);
         this.JWT_KEY = jwtKey;
         this.username = null;
         this.password = null;
     }
 
-    public Connector(String apiAddress, String username, String password) throws Exception {
+    public SprovaConnector(String apiAddress, String username, String password) throws Exception {
         this.API_ADDRESS = ApiUtils.sanitizeUrl(apiAddress);
         this.username = username;
         this.password = password;
@@ -40,9 +40,10 @@ public class Connector {
     /**
      * Make sure user is authenticated via JWT token.
      *
-     * @return
+     * @return authentication success
      */
-    public boolean authenticate() {
+    public boolean isAuthenticated() {
+        logger.warn("isAuthenticated() not implemented");
         return true;
     }
 
@@ -65,6 +66,11 @@ public class Connector {
         return result;
     }
 
+    /**
+     * Get or initialize and get client.
+     *
+     * @return sprova api client
+     */
     public SprovaApiClient getApiClient() {
         if (this.apiClient == null) {
             try {

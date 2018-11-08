@@ -1,9 +1,6 @@
 package al.aldi.sprova4j;
 
-import al.aldi.sprova4j.exections.CycleException;
-import al.aldi.sprova4j.exections.TestCaseException;
 import al.aldi.sprova4j.models.*;
-import al.aldi.sprova4j.models.aux.TestSetExecutionResponse;
 import al.aldi.sprova4j.utils.SprovaObjectFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,9 +18,9 @@ public class Main {
         logger.info("Sprova4J running");
         logger.info("Implementation still missing");
 
-        Connector conn = null;
+        SprovaConnector conn = null;
         try {
-            conn = new Connector("http://localhost:8181/", "admin", "admin");
+            conn = new SprovaConnector("http://localhost:8181/", "admin", "admin");
 
             apiClient = conn.getApiClient();
             project = apiClient.getProject("5ae5bda75b435f3d2b999c79");

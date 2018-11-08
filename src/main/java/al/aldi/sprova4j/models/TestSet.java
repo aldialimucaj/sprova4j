@@ -1,6 +1,6 @@
 package al.aldi.sprova4j.models;
 
-import al.aldi.sprova4j.exections.TestCaseException;
+import al.aldi.sprova4j.exceptions.TestCaseException;
 import al.aldi.sprova4j.exections.TestSetException;
 import al.aldi.sprova4j.models.aux.TestSetExecutionResponse;
 import al.aldi.sprova4j.utils.SprovaObjectFilter;
