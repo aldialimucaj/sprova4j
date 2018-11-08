@@ -1,21 +1,15 @@
 package al.aldi.sprova4j;
 
-import al.aldi.sprova4j.exections.CycleException;
-import al.aldi.sprova4j.exections.ExecutionException;
-import al.aldi.sprova4j.exections.SprovaClientException;
-import al.aldi.sprova4j.exections.TestCaseException;
-import al.aldi.sprova4j.models.Cycle;
-import al.aldi.sprova4j.models.Execution;
-import al.aldi.sprova4j.models.Project;
-import al.aldi.sprova4j.models.TestCase;
-import al.aldi.sprova4j.models.aux.PutExecutionResponse;
+import al.aldi.sprova4j.exections.*;
+import al.aldi.sprova4j.models.*;
+import al.aldi.sprova4j.models.aux.MongoDbInsertResponse;
+import al.aldi.sprova4j.models.aux.TestSetExecutionResponse;
 import al.aldi.sprova4j.utils.AuthorizationInterceptor;
 import al.aldi.sprova4j.utils.LoggingInterceptor;
 import javax.validation.constraints.NotNull;
 import okhttp3.*;
 
 import java.io.IOException;
-import java.util.Base64;
 import java.util.List;
 
 import static al.aldi.sprova4j.utils.ApiUtils.*;
@@ -117,6 +111,79 @@ public class SprovaApiClient {
 
 
     // ----------------------------------------------------------------------------
+    // TEST SET
+    // ----------------------------------------------------------------------------
+
+    public List<TestSet> getTestSetsByCycleId(String cycleId) {
+        List<TestSet> result = null;
+
+        try {
+            result = TestSet.toObjects(get(String.format("%s/%s/%s", API_CYCLES, cycleId, TESTSETS)));
+            for (TestSet c : result) {
+                c.setClient(this);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
+    public TestSet filterTestSetByCycleId(String cycleId, String jsonFiler) throws TestCaseException {
+        TestSet result = null;
+
+        try {
+            result = TestSet.toObject(post(String.format("%s/%s/%s/findOne", API_CYCLES, cycleId, TESTSETS), jsonFiler));
+            if (result  == null) {
+                throw new TestCaseException("Test set not found => filter: " + jsonFiler);
+            }
+            result.setClient(this);
+            result.cycleId = cycleId;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
+    public List<TestSet> filterTestSets(final String jsonFiler) throws TestSetException {
+        List<TestSet> result = null;
+
+        try {
+            result = TestSet.toObjects(post(String.format("%s/%s", API_TESTSETS, FILTER), jsonFiler));
+            if (result  == null) {
+                throw new TestSetException("Test set not found => filter: " + jsonFiler);
+            }
+            for (TestSet c : result) {
+                c.setClient(this);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
+    // ----------------------------------------------------------------------------
+    // TEST SET EXECUTION
+    // ----------------------------------------------------------------------------
+
+    public TestSetExecutionResponse createTestExecution(final TestSetExecution testSetExecution) throws TestSetException {
+        TestSetExecutionResponse result = null;
+
+        try {
+            result = TestSetExecutionResponse.toObject(post(String.format("%s", API_TESTSET_EXECUTIONS), testSetExecution.toJson()));
+            if (result  == null) {
+                throw new TestSetException("Could not create new test set execution");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
+    // ----------------------------------------------------------------------------
     // TEST CASE
     // ----------------------------------------------------------------------------
 
@@ -157,10 +224,10 @@ public class SprovaApiClient {
     // EXECUTION
     // ----------------------------------------------------------------------------
     public Execution startExecution(Execution execution) {
-        PutExecutionResponse response;
+        MongoDbInsertResponse response;
         String jsonString = execution.toJson();
         try {
-            response = PutExecutionResponse.toObject(put(API_EXECUTIONS, jsonString));
+            response = MongoDbInsertResponse.toObject(post(API_EXECUTIONS, jsonString));
             if (response.ok == 1) {
                 execution._id = response._id;
             } else {
@@ -187,7 +254,7 @@ public class SprovaApiClient {
         boolean result = false;
         String jsonString = execution.toJson();
         try {
-            PutExecutionResponse response = PutExecutionResponse.toObject(post(String.format("%s/%s/%s/%s/%s", API_EXECUTIONS, execution._id, STEPS, stepIndex, status), jsonString));
+            MongoDbInsertResponse response = MongoDbInsertResponse.toObject(put(String.format("%s/%s/%s/%s/%s", API_EXECUTIONS, execution._id, STEPS, stepIndex, status), jsonString));
             result = response.ok == 1;
         } catch (IOException e) {
             e.printStackTrace();
@@ -206,10 +273,10 @@ public class SprovaApiClient {
     }
 
     private Execution setExecutionStatus(Execution execution, String status) {
-        PutExecutionResponse response;
+        MongoDbInsertResponse response;
         String jsonString = execution.toJson();
         try {
-            response = PutExecutionResponse.toObject(post(String.format("%s/%s/%s", API_EXECUTIONS, execution._id, status), jsonString));
+            response = MongoDbInsertResponse.toObject(put(String.format("%s/%s/%s", API_EXECUTIONS, execution._id, status), jsonString));
             if (response.ok == 1) {
                 execution._id = response._id;
             } else {
